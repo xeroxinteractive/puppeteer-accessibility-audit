@@ -4,32 +4,46 @@ const path = require('path');
 const puppeteer = require('puppeteer');
 const protocolify = require('protocolify');
 
-module.exports = (url, opts, cb) => {
-  if (typeof opts !== 'object') {
-      cb = opts;
-      opts = {};
+class PuppeteerAccessibilityAudit {
+  
+  constructor() {
+    this.options = {};
+    this.browser = null;
+    this.externalBrowserInstance = false;  
   }
 
-  opts = opts || {};
+  async launch(opts) {
+    if (opts) {
+      this.options = opts;
+    }
 
-  if (typeof cb !== 'function') {
-      throw new TypeError('Callback required');
-  }
+    if (this.options.browser) {
+      this.browser = options.browser;
+      this.externalBrowserInstance = true;
+    }
 
-  if (!(url && url.length > 0)) {
+    if (!this.browser) {
+      this.browser = await puppeteer.launch();
+    }
+  } 
+
+  async audit(url) {
+    if (!this.browser) {
+      throw new Error('You must called the `launch` method first to start puppeteer');
+    }
+
+    if (!(url && url.length > 0)) {
       throw new Error('Specify at least one URL');
-  }
+    }
 
-  url = protocolify(url);
+    const page = await this.browser.newPage();
 
-  puppeteer.launch().then(async (browser) => 
-  {
     try 
     {
-      const page = await browser.newPage();
+      url = protocolify(url);
       
-      if (opts.viewport) {
-        await page.setViewport(opts.viewport);
+      if (this.options.viewport) {
+        await page.setViewport(this.options.viewport);
       }
     
       await page.goto(url);
@@ -79,16 +93,24 @@ module.exports = (url, opts, cb) => {
         return JSON.parse(JSON.stringify(output));      
       });
 
-      cb(null, audit, report);
+      return { audit, report }
 
     } catch (error) {
-      cb(error);
+      throw error;
     }
     finally {
-      await browser.close();
+      await page.close();
     }
-  })
-  .catch(async (error) => {
-    cb(error);
-  });
-};
+  }
+
+  async destroy() {
+    if (!this.externalBrowserInstance && this.browser) {
+      await this.browser.close();
+    }
+
+    this.browser = null;
+    this.externalBrowserInstance = false;
+  }
+}
+
+module.exports = new PuppeteerAccessibilityAudit();

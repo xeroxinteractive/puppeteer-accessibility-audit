@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`audit fixture.html using async 1`] = `
+Array [
+  Object {
+    "code": "AX_ARIA_04",
+    "elements": "
+DIV:nth-of-type(3) > INPUT
+DIV:nth-of-type(5) > INPUT
+#aria-invalid",
+    "heading": "ARIA state and property values must be valid",
+    "result": "FAIL",
+    "severity": "Severe",
+    "url": "https://github.com/GoogleChrome/accessibility-developer-tools/wiki/Audit-Rules#ax_aria_04",
+  },
+]
+`;
+
+exports[`test that an empty URL fails 1`] = `[Error: Specify at least one URL]`;
+
+exports[`test that an error is thrown if not launched 1`] = `[Error: You must called the \`launch\` method first to start puppeteer]`;

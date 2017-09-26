@@ -1,34 +1,40 @@
 'use strict';
 
-const paa = require('..');
-
 const auditsWithHeader = (audit, header) => audit.filter(x => x.heading === header);
+let paa;
 
-test('test that an empty URL fails', () => {
-  expect(() => {
-    paa('', {}, () => {});
-  }).toThrow();
+beforeEach(async () => {
+  paa = require('..');
+})
+
+afterEach(async () => {
+  await paa.destroy();
+})
+
+test('test that an error is thrown if not launched', async () => {
+  await expect(paa.audit('__tests__/fixture.html')).rejects.toMatchSnapshot();
 });
 
-test('test that no callback fails', () => {
-  expect(() => {
-    paa('http://www.google.com', {}, null);
-  }).toThrow();
+test('test that an empty URL fails', async () => {
+  await paa.launch();
+
+  await expect(paa.audit('')).rejects.toMatchSnapshot();
 });
 
-test('audit fixture.html', () => {
-  paa('__tests__/fixture.html', {}, (error, audit, report) => {
-    expect(error).toBeNull();
+test('audit fixture.html using async', async () => {
+  await paa.launch();
 
-    expect(audit).not.toBeNull();
-    expect(audit.length).not.toBeNull();
-    expect(audit.length).not.toEqual(0);
+  let {audit, report} = await paa.audit('__tests__/fixture.html');
 
-    const ariaReports = auditsWithHeader(audit, 'ARIA state and property values must be valid');
-    expect(ariaReports).not.toBeNull();
-    expect(ariaReports.length).not.toBeNull();
-    expect(ariaReports.length).toBeGreaterThan(0);
+  expect(audit).not.toBeNull();
+  expect(audit.length).not.toBeNull();
+  expect(audit.length).not.toEqual(0);
 
-    expect(report.length).not.toEqual(0);    
-  });
+  const ariaReports = auditsWithHeader(audit, 'ARIA state and property values must be valid');
+  expect(ariaReports).not.toBeNull();
+  expect(ariaReports.length).not.toBeNull();
+  expect(ariaReports.length).toBeGreaterThan(0);
+  expect(ariaReports).toMatchSnapshot();
+
+  expect(report.length).not.toEqual(0);
 });
