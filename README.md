@@ -6,4 +6,4 @@ Utilises [GoogleChrome/puppeteer](https://github.com/GoogleChrome/puppeteer) and
 
 ## Credits
 
-Lots of copy and pasting of [A11y](https://github.com/addyosmani/a11y) by [Addy Osmani](https://github.com/addyosmani)
+Lots of copy and pasting of [a11y](https://github.com/addyosmani/a11y) by [Addy Osmani](https://github.com/addyosmani)
