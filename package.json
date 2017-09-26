@@ -1,0 +1,18 @@
+{
+  "name": "puppeteer-accessibility-audit",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Paul Hawxby <phawxby@gmail.com>",
+  "license": "SEE LICENSE IN LICENSE",
+  "dependencies": {
+    "accessibility-developer-tools": "^2.12.0",
+    "protocolify": "^2.0.0",
+    "puppeteer": "^0.11.0"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^21.1.0"
+  }
+}

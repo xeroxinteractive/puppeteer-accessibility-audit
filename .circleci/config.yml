@@ -1,0 +1,31 @@
+version: 2
+jobs:
+  test:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:8-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - node-cache-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install node dependencies
+          command: |
+            yarn install --no-progress
+      - save_cache:
+          key: node-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.yarn-cache
+            - ./node_modules
+
+      - run:
+          name: Test
+          command: |
+            yarn run test
+
+workflows:
+  version: 2
+  test_tag_deploy:
+    jobs:
+      - test
