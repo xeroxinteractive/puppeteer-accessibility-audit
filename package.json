@@ -1,6 +1,6 @@
 {
   "name": "puppeteer-accessibility-audit",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "index.js",
   "author": "Paul Hawxby <phawxby@gmail.com>",
   "license": "SEE LICENSE IN LICENSE",
