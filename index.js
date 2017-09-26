@@ -90,7 +90,5 @@ module.exports = (url, opts, cb) => {
   })
   .catch(async (error) => {
     cb(error);
-
-    await browser.close();
   });
 };

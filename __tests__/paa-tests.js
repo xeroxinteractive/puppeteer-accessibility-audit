@@ -18,13 +18,17 @@ test('test that no callback fails', () => {
 
 test('audit fixture.html', () => {
   paa('fixture.html', {}, (error, audit, report) => {
-    expect(audit).not.toBeNull();
-    expect(audit.length).not.toEqual(0);
+    expect(error).toBeNull();
 
-    expect(report.length).not.toEqual(0);
+    expect(audit).not.toBeNull();
+    expect(audit.length).not.toBeNull();
+    expect(audit.length).not.toEqual(0);
 
     const ariaReports = auditsWithHeader(audit, 'ARIA state and property values must be valid');
     expect(ariaReports).not.toBeNull();
+    expect(ariaReports.length).not.toBeNull();
     expect(ariaReports.length).toBeGreaterThan(0);
+
+    expect(report.length).not.toEqual(0);    
   });
 });
