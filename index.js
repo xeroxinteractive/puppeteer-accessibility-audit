@@ -43,8 +43,8 @@ module.exports = (url, opts, cb) => {
         const results = axs.Audit.run(auditConfig);      
 
         const audit = results.map(function (result) {
-          const DOMElements = result.elements;
-          const message = '';
+          let DOMElements = result.elements;
+          let message = '';
 
           if (DOMElements !== undefined) {
             for (let i = 0; i < DOMElements.length; i++) {
@@ -71,12 +71,12 @@ module.exports = (url, opts, cb) => {
           };
         });
 
-        const result = {
+        const output = {
           audit: audit,
           report: axs.Audit.createReport(results)
         };
 
-        return JSON.parse(JSON.stringify(result));      
+        return JSON.parse(JSON.stringify(output));      
       });
 
       cb(null, audit, report);

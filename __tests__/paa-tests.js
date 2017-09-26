@@ -17,7 +17,7 @@ test('test that no callback fails', () => {
 });
 
 test('audit fixture.html', () => {
-  paa('fixture.html', {}, (error, audit, report) => {
+  paa('__tests__/fixture.html', {}, (error, audit, report) => {
     expect(error).toBeNull();
 
     expect(audit).not.toBeNull();
