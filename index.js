@@ -7,15 +7,16 @@ const protocolify = require('protocolify');
 class PuppeteerAccessibilityAudit {
   
   constructor() {
-    this.options = {};
+    this.options = {
+      puppeteerConfig: {},
+      auditScopeSelector: "body"
+    };
     this.browser = null;
     this.externalBrowserInstance = false;  
   }
 
   async launch(opts) {
-    if (opts) {
-      this.options = opts;
-    }
+    this.options = Object.assign({}, this.options, opts);
 
     if (this.options.browser) {
       this.browser = options.browser;
@@ -23,7 +24,7 @@ class PuppeteerAccessibilityAudit {
     }
 
     if (!this.browser) {
-      this.browser = await puppeteer.launch();
+      this.browser = await puppeteer.launch(this.options.puppeteerConfig);
     }
   } 
 
@@ -49,10 +50,10 @@ class PuppeteerAccessibilityAudit {
       await page.goto(url);
       await page.injectFile('node_modules/accessibility-developer-tools/dist/js/axs_testing.js');
       
-      const {audit, report} = await page.evaluate(() => 
+      const {audit, report} = await page.evaluate((options) => 
       {
         const auditConfig = new axs.AuditConfiguration();
-        auditConfig.scope = document.body
+        auditConfig.scope = document.querySelector(options.auditScopeSelector);
 
         const results = axs.Audit.run(auditConfig);      
 
@@ -91,7 +92,7 @@ class PuppeteerAccessibilityAudit {
         };
 
         return JSON.parse(JSON.stringify(output));      
-      });
+      }, this.options);
 
       return { audit, report }
 
