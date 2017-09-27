@@ -8,7 +8,9 @@ class PuppeteerAccessibilityAudit {
   
   constructor() {
     this.options = {
-      puppeteerConfig: {},
+      puppeteerConfig: {
+        timeout: 5000 // 5 seconds
+      },
       auditScopeSelector: "body"
     };
     this.browser = null;
@@ -47,7 +49,20 @@ class PuppeteerAccessibilityAudit {
         await page.setViewport(this.options.viewport);
       }
     
-      await page.goto(url);
+      try {
+        await page.goto(url);
+      }
+      catch (err) {
+        return {
+          code: "PUPPETEER_LOAD_ERROR",
+          heading: `Unable to load page: ${err.message}`,
+          result: "NA",
+          severity: "WARNING",
+          url: url,
+          elements: ""
+        };
+      }
+      
       await page.injectFile('node_modules/accessibility-developer-tools/dist/js/axs_testing.js');
       
       const {audit, report} = await page.evaluate((options) => 
